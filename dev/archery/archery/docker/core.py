@@ -91,7 +91,7 @@ class ComposeConfig:
 
     def _read_config(self, config_path, compose_bin):
         """
-        Validate and read the docker-compose.yml
+        Validate and read the docker compose.yml
         """
         yaml = YAML()
         with config_path.open() as fp:
@@ -121,20 +121,20 @@ class ComposeConfig:
                 '`x-hierarchy`'.format(name)
             )
 
-        # trigger docker-compose's own validation
-        compose = Command('docker-compose')
+        # trigger docker compose's own validation
+        compose = Command('docker compose')
         args = ['--file', str(config_path), 'config']
         result = compose.run(*args, env=self.env, check=False,
                              stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
         if result.returncode != 0:
-            # strip the intro line of docker-compose errors
+            # strip the intro line of docker compose errors
             errors += result.stderr.decode().splitlines()
 
         if errors:
             msg = '\n'.join([' - {}'.format(msg) for msg in errors])
             raise ValueError(
-                'Found errors with docker-compose:\n{}'.format(msg)
+                'Found errors with docker compose:\n{}'.format(msg)
             )
 
         rendered_config = StringIO(result.stdout.decode())
@@ -165,7 +165,7 @@ class DockerCompose(Command):
 
     def __init__(self, config_path, dotenv_path=None, compose_bin=None,
                  params=None):
-        compose_bin = default_bin(compose_bin, 'docker-compose')
+        compose_bin = default_bin(compose_bin, 'docker compose')
         self.config = ComposeConfig(config_path, dotenv_path, compose_bin,
                                     params)
         self.bin = compose_bin
@@ -187,7 +187,7 @@ class DockerCompose(Command):
                 )
             msg = (
                 "`{cmd}` exited with a non-zero exit code {code}, see the "
-                "process log above.\n\nThe docker-compose command was "
+                "process log above.\n\nThe docker compose command was "
                 "invoked with the following parameters:\n\nDefaults defined "
                 "in .env:\n{dotenv}\n\nArchery was called with:\n{params}"
             )
@@ -380,7 +380,7 @@ class DockerCompose(Command):
                 cmd = service.get('command', '')
                 if cmd:
                     # service command might be already defined as a list
-                    # on the docker-compose yaml file.
+                    # on the docker compose yaml file.
                     if isinstance(cmd, list):
                         cmd = shlex.join(cmd)
                     args.extend(shlex.split(cmd))
@@ -388,7 +388,7 @@ class DockerCompose(Command):
             # execute as a plain docker cli command
             self._execute_docker('run', '--rm', *args)
         else:
-            # execute as a docker-compose command
+            # execute as a docker compose command
             args.append(service_name)
             if command is not None:
                 args.append(command)
