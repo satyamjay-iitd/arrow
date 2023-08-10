@@ -393,6 +393,44 @@ services:
       - ${DOCKER_VOLUME_PREFIX}ubuntu-ccache:/ccache:delegated
     command: *cpp-command
 
+  ubuntu-plasma-store:
+    # Usage:
+    #   docker-compose build ubuntu-cpp
+    #   docker-compose run --rm ubuntu-cpp
+    # Parameters:
+    #   ARCH: amd64, arm64v8, s390x, ...
+    #   UBUNTU: 20.04, 22.04
+    image: ${REPO}:${ARCH}-ubuntu-${UBUNTU}-cpp
+    build:
+      context: .
+      dockerfile: ci/docker/ubuntu-${UBUNTU}-plasma-store.dockerfile
+      cache_from:
+        - ${REPO}:${ARCH}-ubuntu-${UBUNTU}-plasma-store
+      args:
+        arch: ${ARCH}
+        base: "${ARCH}/ubuntu:${UBUNTU}"
+        clang_tools: ${CLANG_TOOLS}
+        llvm: ${LLVM}
+        gcc_version: ${GCC_VERSION}
+    shm_size: *shm-size
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    security_opt:
+      - apparmor:unconfined
+    ulimits: *ulimits
+    environment:
+      <<: [ *ccache, *sccache ]
+      ARROW_ENABLE_TIMING_TESTS:  # inherit
+      ARROW_MIMALLOC: "ON"
+
+    volumes: &ubuntu-volumes
+      - .:/arrow:delegated
+      - ${DOCKER_VOLUME_PREFIX}ubuntu-ccache:/ccache:delegated
+    command: ls -la
+
+
   ubuntu-cpp-static:
     # Usage:
     #   docker-compose build ubuntu-cpp-static
