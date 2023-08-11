@@ -408,7 +408,7 @@ services:
         - ${REPO}:${ARCH}-ubuntu-${UBUNTU}-plasma-store
       args:
         arch: ${ARCH}
-        base: nvidia/cuda:12.2.0-devel-ubuntu20.04
+        base: nvidia/cuda:12.2.0-devel-ubuntu22.04
         clang_tools: ${CLANG_TOOLS}
         llvm: ${LLVM}
         gcc_version: ${GCC_VERSION}
