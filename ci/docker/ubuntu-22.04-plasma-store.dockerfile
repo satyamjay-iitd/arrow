@@ -201,4 +201,5 @@ RUN mkdir /arrow/cpp
 COPY cpp /arrow/cpp
 COPY .env /arrow/
 COPY LICENSE.txt /arrow/
+COPY NOTICE.txt /arrow/
 RUN /arrow/ci/scripts/cpp_build.sh /arrow /build

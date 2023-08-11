@@ -29,6 +29,7 @@
 !cpp/**
 !.env
 !LICENSE.txt
+!NOTICE.txt
 !c_glib/Gemfile
 !dev/archery/setup.py
 !dev/release/setup-*.sh
