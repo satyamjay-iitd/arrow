@@ -26,6 +26,9 @@
 
 # include explicitly
 !ci/**
+!cpp/**
+!.env
+!LICENSE.txt
 !c_glib/Gemfile
 !dev/archery/setup.py
 !dev/release/setup-*.sh

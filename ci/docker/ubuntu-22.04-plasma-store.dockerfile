@@ -149,6 +149,8 @@ RUN if [ "${gcc_version}" = "" ]; then \
 COPY ci/scripts/install_minio.sh /arrow/ci/scripts/
 RUN /arrow/ci/scripts/install_minio.sh latest /usr/local
 
+COPY ci/scripts/install_gcs_testbench.sh /arrow/ci/scripts/
+RUN /arrow/ci/scripts/install_gcs_testbench.sh default
 
 COPY ci/scripts/install_sccache.sh /arrow/ci/scripts/
 RUN /arrow/ci/scripts/install_sccache.sh unknown-linux-musl /usr/local/bin
@@ -164,11 +166,15 @@ RUN /arrow/ci/scripts/install_sccache.sh unknown-linux-musl /usr/local/bin
 # ARROW-17051: this build uses static Protobuf, so we must also use
 # static Arrow to run Flight/Flight SQL tests
 ENV absl_SOURCE=BUNDLED \
-    ARROW_COMPUTE=ON \
-    ARROW_CSV=ON \
+    ARROW_ACERO=ON \
+    ARROW_BUILD_STATIC=ON \
+    ARROW_DEPENDENCY_SOURCE=SYSTEM \
+#    ARROW_COMPUTE=ON \
+#    ARROW_CSV=ON \
     ARROW_DATASET=ON \
-    ARROW_FILESYSTEM=ON \
+#    ARROW_FILESYSTEM=ON \
     ARROW_JSON=ON \
+    ARROW_HOME=/usr/local \
     ARROW_PARQUET=ON \
     ARROW_WITH_BROTLI=ON \
     ARROW_WITH_BZ2=ON \
@@ -176,7 +182,7 @@ ENV absl_SOURCE=BUNDLED \
     ARROW_WITH_SNAPPY=ON \
     ARROW_WITH_ZLIB=ON \
     ARROW_WITH_ZSTD=ON \
-    ARROW_CUDA=ON \
+#    ARROW_CUDA=ON \
     ARROW_PLASMA=ON \
     AWSSDK_SOURCE=BUNDLED \
     google_cloud_cpp_storage_SOURCE=BUNDLED \
@@ -191,4 +197,8 @@ ENV absl_SOURCE=BUNDLED \
 
 
 COPY ci/scripts/cpp_build.sh /arrow/ci/scripts/
-RUN /arrow/ci/scripts/cpp_build.sh /arrow /build &&
+RUN mkdir /arrow/cpp
+COPY cpp /arrow/cpp
+COPY .env /arrow/
+COPY LICENSE.txt /arrow/
+RUN /arrow/ci/scripts/cpp_build.sh /arrow /build
