@@ -408,7 +408,7 @@ services:
         - ${REPO}:${ARCH}-ubuntu-${UBUNTU}-plasma-store
       args:
         arch: ${ARCH}
-        base: "${ARCH}/ubuntu:${UBUNTU}"
+        base: nvidia/cuda:${CUDA}-devel-ubuntu${UBUNTU}
         clang_tools: ${CLANG_TOOLS}
         llvm: ${LLVM}
         gcc_version: ${GCC_VERSION}
